@@ -18,7 +18,8 @@ function getLocation() {
         .then(function (response) {
             console.log(response);
             res = "31.251634|75.705436"
-            locationData = res.split('|');
+            locationData = response.data.state;
+            locationData = locationData.split('|');
             console.log(locationData);
             console.log(Number(locationData[0]), Number(locationData[1]));
             redraw(Number(locationData[0]), Number(locationData[1]));
