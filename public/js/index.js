@@ -2,6 +2,16 @@ window.lat = 31.251634;
 window.lng = 75.705436;
 var map;
 var mark;
+var flightPath;
+var locationTrack = [{
+        lat: 31.251634,
+        lng: 75.705436
+    }
+    //, {
+    //     lat: 31.251634,
+    //     lng: 75.705436
+    // }
+];
 
 function getLocation() {
     axios({
@@ -20,9 +30,16 @@ function getLocation() {
             res = "31.251634|75.705436"
             locationData = response.data.state;
             locationData = locationData.split('|');
-            console.log(locationData);
             console.log(Number(locationData[0]), Number(locationData[1]));
-            redraw(Number(locationData[0]), Number(locationData[1]));
+            if (locationTrack[locationTrack.length - 1].lat != Number(locationData[0]) ||
+                locationTrack[locationTrack.length - 1].lng != Number(locationData[1])) {
+                locationTrack.push({
+                    lat: Number(locationData[0]),
+                    lng: Number(locationData[1])
+                })
+                redraw(Number(locationData[0]), Number(locationData[1]));
+                console.log(locationTrack);
+            }
         })
         .catch(function (response) {
             console.log(response);
@@ -51,6 +68,15 @@ var initialize = function () {
         icon: '/images/placemarker.png',
         map: map
     });
+
+    flightPath = new google.maps.Polyline({
+        path: locationTrack,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        map: map
+    });
 };
 
 function redraw(lat, lng) {
@@ -65,6 +91,7 @@ function redraw(lat, lng) {
         lng: lng,
         alt: 0
     });
+    flightPath.setPath(locationTrack);
 }
 
 window.initialize = initialize;
