@@ -60,12 +60,18 @@ var initialize = function () {
         },
         zoom: 12
     });
+
+    var markerImage = new google.maps.MarkerImage('/images/placemarker.png',
+        new google.maps.Size(60, 60),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(30, 30));
+
     mark = new google.maps.Marker({
         position: {
             lat: lat,
             lng: lng
         },
-        icon: '/images/placemarker.png',
+        icon: markerImage,
         map: map
     });
 
