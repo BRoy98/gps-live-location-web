@@ -1,11 +1,20 @@
 window.lat = 31.251634;
 window.lng = 75.705436;
+window.lat2 = 31.251634;
+window.lng2 = 75.705436;
 var map;
 var mark;
+var mark2;
 var flightPath;
+var flightPath2;
 var locationTrack = [{
-        lat: 31.251634,
-        lng: 75.705436
+    lat: 31.251634,
+    lng: 75.705436
+}]
+
+var locationTrack2 = [{
+        lat2: 31.251625,
+        lng2: 75.705420
     }
     //, {
     //     lat: 31.251634,
@@ -19,7 +28,7 @@ function getLocation() {
             url: 'https://api.iotsardar.com/v1/user/get/text',
             data: {
                 "api_key": "1f178a1a3bc6ac3a97994e00cd775672",
-                "widget_id": "b09bdf3f4b6acf4a"
+                "widget_id": "b6c45ce2b24caf7f"
             },
             headers: {
                 'Content-Type': 'application/json'
@@ -40,6 +49,32 @@ function getLocation() {
                 redraw(Number(locationData[0]), Number(locationData[1]));
                 console.log(locationTrack);
             }
+        })
+        .catch(function (response) {
+            console.log(response);
+        });
+    return null;
+};
+
+function getLocation2() {
+    axios({
+            method: 'post',
+            url: 'https://api.iotsardar.com/v1/user/get/text',
+            data: {
+                "api_key": "1f178a1a3bc6ac3a97994e00cd775672",
+                "widget_id": "aa80dfd932a54256"
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function (response) {
+            locationData = response.data.state.split('|');
+            redraw(Number(locationData[0]), Number(locationData[1]));
+
+            setTimeout(function () {
+                getLocation2(location);
+            }, 5000);
         })
         .catch(function (response) {
             console.log(response);
@@ -74,6 +109,14 @@ var initialize = function () {
         icon: markerImage,
         map: map
     });
+    mark2 = new google.maps.Marker({
+        position: {
+            lat: lat2,
+            lng: lng2
+        },
+        icon: '/images/placemarker.png',
+        map: map
+    });
 
     flightPath = new google.maps.Polyline({
         path: locationTrack,
@@ -83,6 +126,16 @@ var initialize = function () {
         strokeWeight: 2,
         map: map
     });
+    flightPath2 = new google.maps.Polyline({
+        path: locationTrack,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        map: map
+    });
+
+    getLocation();
 };
 
 function redraw(lat, lng) {
@@ -98,6 +151,7 @@ function redraw(lat, lng) {
         alt: 0
     });
     flightPath.setPath(locationTrack);
+    flightPath2.setPath(locationTrack);
 }
 
 window.initialize = initialize;
