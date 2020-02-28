@@ -101,6 +101,13 @@ var initialize = function () {
         new google.maps.Point(0, 0),
         new google.maps.Point(30, 30));
 
+
+    var bikeImage = new google.maps.MarkerImage('/images/motorbike.png',
+        new google.maps.Size(64, 64),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(32, 32));
+
+
     mark = new google.maps.Marker({
         position: {
             lat: lat,
@@ -114,7 +121,7 @@ var initialize = function () {
             lat: lat2,
             lng: lng2
         },
-        icon: '/images/placemarker.png',
+        icon: bikeImage,
         map: map
     });
 
@@ -123,15 +130,15 @@ var initialize = function () {
         geodesic: true,
         strokeColor: '#FF0000',
         strokeOpacity: 0.8,
-        strokeWeight: 2,
+        strokeWeight: 5,
         map: map
     });
     flightPath2 = new google.maps.Polyline({
         path: locationTrack,
         geodesic: true,
-        strokeColor: '#FF0000',
+        strokeColor: '#039be5',
         strokeOpacity: 0.8,
-        strokeWeight: 2,
+        strokeWeight: 5,
         map: map
     });
 
