@@ -1,7 +1,7 @@
 window.lat = 31.251634;
 window.lng = 75.705436;
-window.lat2 = 31.251634;
-window.lng2 = 75.705436;
+window.lat2 = 31.258291;
+window.lng2 = 75.709402;
 var map;
 var mark;
 var mark2;
@@ -10,17 +10,24 @@ var flightPath2;
 var locationTrack = [{
     lat: 31.251634,
     lng: 75.705436
+}, {
+    lat: 31.247600,
+    lng: 75.697349
+}, {
+    lat: 31.251503,
+    lng: 75.705816
 }]
 
 var locationTrack2 = [{
-        lat2: 31.251625,
-        lng2: 75.705420
-    }
-    //, {
-    //     lat: 31.251634,
-    //     lng: 75.705436
-    // }
-];
+    lat: 31.251625,
+    lng: 75.705420
+}, {
+    lat: 31.251542,
+    lng: 75.705632
+}, {
+    lat: 31.258291,
+    lng: 75.709402
+}];
 
 function getLocation() {
     axios({
@@ -36,7 +43,6 @@ function getLocation() {
         })
         .then(function (response) {
             console.log(response);
-            res = "31.251634|75.705436"
             locationData = response.data.state;
             locationData = locationData.split('|');
             console.log(Number(locationData[0]), Number(locationData[1]));
@@ -47,7 +53,7 @@ function getLocation() {
                     lng: Number(locationData[1])
                 })
                 redraw(Number(locationData[0]), Number(locationData[1]));
-                console.log(locationTrack);
+                console.log('locationTrack', locationTrack);
             }
         })
         .catch(function (response) {
@@ -69,8 +75,19 @@ function getLocation2() {
             }
         })
         .then(function (response) {
-            locationData = response.data.state.split('|');
-            redraw(Number(locationData[0]), Number(locationData[1]));
+            locationData = response.data.state;
+            locationData = locationData.split('|');
+            console.log(Number(locationData[0]), Number(locationData[1]));
+
+            if (locationTrack2[locationTrack2.length - 1].lat != Number(locationData[0]) ||
+                locationTrack2[locationTrack2.length - 1].lng != Number(locationData[1])) {
+                locationTrack2.push({
+                    lat: Number(locationData[0]),
+                    lng: Number(locationData[1])
+                })
+                redraw(Number(locationData[0]), Number(locationData[1]));
+                console.log('locationTrack2', locationTrack2);
+            }
 
             setTimeout(function () {
                 getLocation2(location);
@@ -84,6 +101,7 @@ function getLocation2() {
 
 setInterval(function () {
     getLocation();
+    getLocation2();
 }, 5000);
 
 
@@ -96,10 +114,10 @@ var initialize = function () {
         zoom: 12
     });
 
-    var markerImage = new google.maps.MarkerImage('/images/placemarker.png',
-        new google.maps.Size(60, 60),
+    var markerImage = new google.maps.MarkerImage('/images/scooter.png',
+        new google.maps.Size(64, 64),
         new google.maps.Point(0, 0),
-        new google.maps.Point(30, 30));
+        new google.maps.Point(32, 32));
 
 
     var bikeImage = new google.maps.MarkerImage('/images/motorbike.png',
@@ -134,7 +152,7 @@ var initialize = function () {
         map: map
     });
     flightPath2 = new google.maps.Polyline({
-        path: locationTrack,
+        path: locationTrack2,
         geodesic: true,
         strokeColor: '#039be5',
         strokeOpacity: 0.8,
@@ -142,23 +160,36 @@ var initialize = function () {
         map: map
     });
 
-    getLocation();
 };
 
-function redraw(lat, lng) {
+function redraw(alat, alng) {
     if ($("#id-name--1").is(":checked"))
         map.setCenter({
-            lat: lat,
-            lng: lng,
+            lat: alat,
+            lng: alng,
             alt: 0
         });
     mark.setPosition({
-        lat: lat,
-        lng: lng,
+        lat: alat,
+        lng: alng,
         alt: 0
     });
     flightPath.setPath(locationTrack);
-    flightPath2.setPath(locationTrack);
+}
+
+function redraw2(mlat, mlng) {
+    if ($("#id-name--1").is(":checked"))
+        map.setCenter({
+            lat: mlat,
+            lng: mlng,
+            alt: 0
+        });
+    mark2.setPosition({
+        lat: mlat,
+        lng: mlng,
+        alt: 0
+    });
+    flightPath2.setPath(locationTrack2);
 }
 
 window.initialize = initialize;
