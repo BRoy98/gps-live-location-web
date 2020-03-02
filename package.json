@@ -4,7 +4,7 @@
   "repository": "https://github.com/BRoy98/gps-live-location-web",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node main.js"
   },
   "author": "Bishwajyoti Roy",
   "contributors": [{
