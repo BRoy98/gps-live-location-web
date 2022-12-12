@@ -12,7 +12,7 @@
     "email": "contact@bishwajyoti.me"
   }],
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.3"
   },
   "devDependencies": {},
   "engines": {
